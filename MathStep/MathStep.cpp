@@ -20,6 +20,7 @@ std::vector<std::string> MathStep::Calculate(std::string input)
 	bool validEquation = this->SyntaxTokenizer();
 	if (validEquation)
 	{
+		this->RemoveRedundantParenthesis();
 		this->PostFix();
 		this->CalculateSteps();
 	}
@@ -251,6 +252,19 @@ bool MathStep::SyntaxTokenizer()
 		return false;
 	}
 }
+void MathStep::RemoveRedundantParenthesis()
+{
+	for (unsigned int i = 1; i < this->equationTokenized.size() - 1; i++)
+	{
+		if (this->equationTokenized[i - 1].value == "(" && this->equationTokenized[i + 1].value == ")")
+		{
+			this->equationTokenized.erase(this->equationTokenized.begin() + i + 1, this->equationTokenized.begin() + i + 2);
+			this->equationTokenized.erase(this->equationTokenized.begin() + i - 1, this->equationTokenized.begin() + i);
+
+			break;
+		}
+	}
+}
 void MathStep::PostFix()
 {
 	std::queue<token> numberQueue;
@@ -322,6 +336,10 @@ void MathStep::PostFix()
 						this->equationPostfix.push_back(operatorStack.top());
 						operatorStack.pop();
 
+						if (operatorStack.empty())
+						{
+							break;
+						}
 						equationIterator = operatorLevel.find(operatorStack.top().value[0]);
 						stackLevel = equationIterator->second;
 					}
@@ -351,7 +369,7 @@ void MathStep::CalculateSteps()
 	unsigned int tokenIndex = this->equationTokenized.size() + 1;
 	token first, second, computation;
 	std::stack<token> stack;
-
+	
 	this->equationStep.push_back(this->equation);
 
 	for (unsigned int i = 0; i < this->equationPostfix.size(); i++)

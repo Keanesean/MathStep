@@ -22,6 +22,7 @@ public:
 private:
 	void RemoveSpaces();
 	bool SyntaxTokenizer();
+	void RemoveRedundantParenthesis();
 	void PostFix();
 	void CalculateSteps();
 
