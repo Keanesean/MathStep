@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
+//Token structure store the tokenized pieces of the equation.  Used to keep track of operators and numbers in order to show the steps in solving.
 struct token
 {
 	unsigned int index;
